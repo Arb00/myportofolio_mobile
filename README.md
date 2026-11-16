@@ -14,7 +14,8 @@ Aplikasi mobile Flutter untuk portofolio pribadi, bagian dari Proyek Individu ma
 - Tiga `InfoCard` berisi NPM, nama, dan kelas.
 - Tiga tombol aksi `ItemCard` dengan warna latar berbeda: **Lihat Proyek** (biru), **Tambah Proyek** (hijau), dan **Logout** (merah).
 - Setiap tombol memunculkan SnackBar "Kamu telah menekan tombol [Nama Tombol]!".
-- Widget test untuk identitas, SnackBar, dan warna tombol (`test/widget_test.dart`).
+- **Fitur tambahan:** tombol Logout membuka dialog konfirmasi (Batal / Logout). Setelah memilih, SnackBar menampilkan "Logout berhasil." atau "Logout dibatalkan.". Konfirmasi diatur lewat atribut opsional `pesanKonfirmasi` di model `ItemHomepage`, jadi tombol lain bisa memakainya tanpa mengubah `ItemCard`.
+- Widget test untuk identitas, SnackBar, warna tombol, dan alur konfirmasi Logout (`test/widget_test.dart`).
 
 ## Cara Menjalankan
 
@@ -39,7 +40,7 @@ flutter test
 | Minggu | Pekerjaan |
 |---|---|
 | Tutorial 08 | Inisialisasi proyek, pemisahan `menu.dart`, `MyHomePage` jadi Stateless, `InfoCard`, `ItemCard`, SnackBar |
-| Tugas 7 | Atribut `color` pada `ItemHomepage` agar tiap tombol punya warna sendiri, widget test warna, README |
+| Tugas 7 | Atribut `color` pada `ItemHomepage` agar tiap tombol punya warna sendiri, dialog konfirmasi Logout, widget test, README |
 
 ---
 
@@ -79,6 +80,9 @@ flutter test
    | `Icon` | Menampilkan ikon tombol (folder, add_circle, logout). |
    | `ScaffoldMessenger` | Mengelola SnackBar: menyembunyikan yang lama lalu menampilkan yang baru. |
    | `SnackBar` | Notifikasi singkat di bawah layar setelah tombol ditekan. |
+   | `AlertDialog` | Dialog konfirmasi yang muncul saat tombol Logout ditekan. |
+   | `TextButton` | Tombol "Batal" di dialog konfirmasi. |
+   | `FilledButton` | Tombol "Logout" di dialog konfirmasi, berwarna sama dengan kartu Logout. |
 
    `ItemHomepage` bukan widget, melainkan kelas model data biasa (nama, ikon, warna) yang dipakai untuk membangun `ItemCard`.
 
@@ -130,7 +134,9 @@ flutter test
   - Mencocokkan kode Tutorial 08 dengan instruksi di PDF tutorial.
   - Menambahkan atribut `color` pada model `ItemHomepage` dan memakainya di `ItemCard` sesuai petunjuk implementasi di soal.
   - Menambahkan widget test untuk warna tombol.
+  - Menambahkan dialog konfirmasi Logout (`AlertDialog`) beserta test-nya.
   - Menyusun draf README ini, termasuk draf jawaban pertanyaan reflektif.
 - **Strategi prompting:** saya memberikan PDF tutorial dan soal tugas kepada AI, lalu meminta pengecekan checklist dan implementasi bagian yang belum ada. Hasilnya saya cek dengan `flutter analyze`, `flutter test`, dan menjalankan aplikasi.
+- **Log chat AI:** [docs/ai-chat-log.md](docs/ai-chat-log.md) berisi ekspor percakapan lengkap dengan Claude Code (pesan saya, jawaban AI, dan aksi yang dijalankan AI).
 - **Yang tetap saya kerjakan sendiri:** setup Flutter SDK dan environment, mengikuti Tutorial 08, serta semua commit dan push ke GitHub.
 - **Keterbatasan AI:** AI tidak bisa menjalankan aplikasi di emulator/Chrome untuk saya, jadi tampilan akhir tetap saya periksa sendiri. Jawaban reflektif dari AI saya baca ulang dan sesuaikan dengan pemahaman saya.
