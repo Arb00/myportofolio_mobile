@@ -11,7 +11,12 @@ class MyHomePage extends StatelessWidget {
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
     ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
-    ItemHomepage("Logout", Icons.logout, Colors.red),
+    ItemHomepage(
+      "Logout",
+      Icons.logout,
+      Colors.red,
+      pesanKonfirmasi: "Yakin ingin keluar dari MyPortfolio?",
+    ),
   ];
 
   @override
@@ -123,7 +128,10 @@ class ItemHomepage {
   final IconData icon;
   final Color color;
 
-  ItemHomepage(this.name, this.icon, this.color);
+  // Jika diisi, aksi tombol harus dikonfirmasi lewat dialog berisi pesan ini.
+  final String? pesanKonfirmasi;
+
+  ItemHomepage(this.name, this.icon, this.color, {this.pesanKonfirmasi});
 }
 
 class ItemCard extends StatelessWidget {
@@ -146,6 +154,11 @@ class ItemCard extends StatelessWidget {
             ..showSnackBar(
               SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
             );
+
+          // Tombol yang berisiko (misalnya Logout) meminta konfirmasi dulu.
+          if (item.pesanKonfirmasi != null) {
+            _tampilkanKonfirmasi(context);
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
@@ -170,5 +183,42 @@ class ItemCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Dialog konfirmasi: tombol utama memakai warna item, lalu SnackBar
+  // memberi tahu hasilnya (dibatalkan atau berhasil).
+  Future<void> _tampilkanKonfirmasi(BuildContext context) async {
+    final setuju = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        icon: Icon(item.icon, color: item.color),
+        title: Text(item.name),
+        content: Text(item.pesanKonfirmasi!),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text("Batal"),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: item.color),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(item.name),
+          ),
+        ],
+      ),
+    );
+
+    // Halaman bisa saja sudah tertutup selama dialog terbuka.
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            setuju == true ? "${item.name} berhasil." : "${item.name} dibatalkan.",
+          ),
+        ),
+      );
   }
 }

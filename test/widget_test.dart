@@ -27,6 +27,45 @@ void main() {
     expect(find.text('Kamu telah menekan tombol Lihat Proyek!'), findsOneWidget);
   });
 
+  testWidgets('Logout meminta konfirmasi dan bisa dibatalkan', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byIcon(Icons.logout));
+    await tester.pumpAndSettle();
+
+    // SnackBar wajib tetap muncul, ditambah dialog konfirmasi.
+    expect(find.text('Kamu telah menekan tombol Logout!'), findsOneWidget);
+    expect(find.text('Yakin ingin keluar dari MyPortfolio?'), findsOneWidget);
+
+    await tester.tap(find.text('Batal'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Logout dibatalkan.'), findsOneWidget);
+  });
+
+  testWidgets('Logout yang dikonfirmasi menampilkan pesan berhasil', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byIcon(Icons.logout));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Logout'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Logout berhasil.'), findsOneWidget);
+  });
+
+  testWidgets('Tombol tanpa konfirmasi tidak membuka dialog', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('Kamu telah menekan tombol Tambah Proyek!'), findsOneWidget);
+  });
+
   testWidgets('Setiap tombol aksi punya warna latar berbeda', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
