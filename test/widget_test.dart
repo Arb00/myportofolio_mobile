@@ -26,4 +26,19 @@ void main() {
 
     expect(find.text('Kamu telah menekan tombol Lihat Proyek!'), findsOneWidget);
   });
+
+  testWidgets('Setiap tombol aksi punya warna latar berbeda', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    Color warnaTombol(String nama) {
+      final material = tester.widget<Material>(
+        find.ancestor(of: find.text(nama), matching: find.byType(Material)).first,
+      );
+      return material.color!;
+    }
+
+    expect(warnaTombol('Lihat Proyek'), Colors.blue);
+    expect(warnaTombol('Tambah Proyek'), Colors.green);
+    expect(warnaTombol('Logout'), Colors.red);
+  });
 }
