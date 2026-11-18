@@ -10,7 +10,9 @@ Aplikasi mobile Flutter untuk portofolio pribadi, bagian dari Proyek Individu ma
 
 ## Fitur Saat Ini
 
-- Halaman utama `MyHomePage` (StatelessWidget) di `lib/menu.dart`, terpisah dari `lib/main.dart`.
+- Halaman utama `MyHomePage` (StatelessWidget) di `lib/screens/menu.dart`, terpisah dari `lib/main.dart`.
+- Drawer menu (`lib/widgets/left_drawer.dart`) untuk berpindah ke Home dan Add Project.
+- Halaman form tambah proyek (`lib/screens/project_form.dart`) dengan validasi; data yang valid ditampilkan di pop-up.
 - Tiga `InfoCard` berisi NPM, nama, dan kelas.
 - Tiga tombol aksi `ItemCard` dengan warna latar berbeda: **Lihat Proyek** (biru), **Tambah Proyek** (hijau), dan **Logout** (merah).
 - Setiap tombol memunculkan SnackBar "Kamu telah menekan tombol [Nama Tombol]!".
@@ -41,6 +43,7 @@ flutter test
 |---|---|
 | Tutorial 08 | Inisialisasi proyek, pemisahan `menu.dart`, `MyHomePage` jadi Stateless, `InfoCard`, `ItemCard`, SnackBar |
 | Tugas 7 | Atribut `color` pada `ItemHomepage` agar tiap tombol punya warna sendiri, dialog konfirmasi Logout, widget test, README |
+| Tutorial 09 | Drawer menu (`LeftDrawer`), form tambah proyek dengan validasi (`ProjectFormPage`), navigasi tombol Tambah Proyek, refactor ke `lib/screens/` dan `lib/widgets/` |
 
 ---
 
