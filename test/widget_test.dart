@@ -80,4 +80,72 @@ void main() {
     expect(warnaTombol('Tambah Proyek'), Colors.green);
     expect(warnaTombol('Logout'), Colors.red);
   });
+
+  testWidgets('Tombol Tambah Proyek membuka form dan Back kembali ke menu', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.pumpAndSettle();
+    expect(find.text('Add Project Form'), findsOneWidget);
+
+    // push() menumpuk halaman, jadi pop() kembali ke menu.
+    final NavigatorState navigator = tester.state(find.byType(Navigator));
+    navigator.pop();
+    await tester.pumpAndSettle();
+    expect(find.text('Selamat datang di MyPortfolio Mobile!'), findsOneWidget);
+  });
+
+  testWidgets('Drawer berpindah antara Home dan Add Project', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    expect(find.text('Explore personal projects and experiences!'), findsOneWidget);
+
+    await tester.tap(find.text('Add Project'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add Project Form'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Home'));
+    await tester.pumpAndSettle();
+    expect(find.text('Selamat datang di MyPortfolio Mobile!'), findsOneWidget);
+  });
+
+  testWidgets('Form menolak nama dan deskripsi kosong', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nama proyek tidak boleh kosong!'), findsOneWidget);
+    expect(find.text('Deskripsi proyek tidak boleh kosong!'), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+  });
+
+  testWidgets('Form valid menampilkan isian di pop-up lalu direset', (WidgetTester tester) async {
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.byIcon(Icons.add_circle));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Nama Proyek'), 'MyPortfolio');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Deskripsi Proyek'), 'Aplikasi portofolio');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Teknologi yang Digunakan'), 'Flutter, Django');
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Proyek berhasil ditambahkan!'), findsOneWidget);
+    expect(find.text('Nama Proyek: MyPortfolio'), findsOneWidget);
+    expect(find.text('Deskripsi: Aplikasi portofolio'), findsOneWidget);
+    expect(find.text('Kategori: Web Development'), findsOneWidget);
+    expect(find.text('Teknologi: Flutter, Django'), findsOneWidget);
+
+    await tester.tap(find.text('OK'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text('MyPortfolio'), findsNothing);
+  });
 }
