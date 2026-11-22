@@ -427,3 +427,379 @@ Ada beberapa path folder pribadi yang ikut tercantum di log. Saya sembunyikan du
 > 🔧 `Edit` — export_log.py
 
 > 🔧 `Bash` — Regenerate log and recheck for private info
+
+**🤖 Claude:**
+
+Log sudah bersih. Sekarang saya tautkan dari bagian AI Disclosure di README.
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Bash` — List changed files
+
+**🤖 Claude:**
+
+Log chat AI sudah jadi di [docs/ai-chat-log.md](docs/ai-chat-log.md) dan sudah saya tautkan dari bagian AI Disclosure di [README.md](README.md). Keduanya belum di-commit.
+
+**Isi log:**
+- Semua pesan Anda (15 pesan, termasuk keterangan saat melampirkan PDF atau screenshot), jawaban saya, dan daftar aksi yang saya jalankan, dari 11 sampai 16 November.
+- Proses berpikir internal AI dan output mentah perintah tidak disertakan.
+- Email dan path folder pribadi di komputer Anda sudah saya sembunyikan, karena repo-nya publik.
+
+Baca dulu sebelum commit. Log ini memuat seluruh percakapan, termasuk bagian awal soal menghapus Claude dari daftar contributor GitHub dan pengosongan repo. Saya tidak memotong bagian itu, supaya log-nya tetap utuh dan jujur. Kalau mau ada yang dihapus, putuskan sendiri, tapi rubrik menilai keterbukaan disclosure.
+
+**Command commit:**
+```
+git add docs/ai-chat-log.md README.md
+git commit -m "docs: lampirkan log chat AI pada AI disclosure"
+git push origin main
+```
+
+Setelah push, kumpulkan link commit baru ini ke SCELE, bukan link commit `618cb0b` yang sebelumnya.
+
+---
+
+## 🧑 Saya — 16 Nov 2026 15:41 WIB
+
+tambahkan log out konfirmasi untuk nilai 4
+
+**🤖 Claude:**
+
+Saya tambahkan dialog konfirmasi untuk tombol Logout. SnackBar wajib "Kamu telah menekan tombol Logout!" tetap muncul, supaya checklist soal tidak ada yang hilang.
+
+> 🔧 `Read` — lib\menu.dart
+
+> 🔧 `Edit` — lib\menu.dart
+
+> 🔧 `Edit` — lib\menu.dart
+
+> 🔧 `Edit` — lib\menu.dart
+
+**🤖 Claude:**
+
+Sekarang saya tambahkan method dialognya di akhir `ItemCard`.
+
+> 🔧 `Read` — lib\menu.dart
+
+> 🔧 `Edit` — lib\menu.dart
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and widget tests
+
+**🤖 Claude:**
+
+Edit method dialognya gagal masuk karena potongan teks penandanya muncul lebih dari sekali di file. Saya ulangi dengan penanda yang unik.
+
+> 🔧 `Edit` — lib\menu.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and widget tests
+
+**🤖 Claude:**
+
+Analyzer bersih dan keenam test lolos. Terakhir, saya perbarui README supaya fitur tambahan ini tercatat.
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Bash` — List changed files
+
+**🤖 Claude:**
+
+Tabel widget di jawaban nomor 2 juga perlu ditambah, karena sekarang ada widget baru.
+
+> 🔧 `Edit` — README.md
+
+**🤖 Claude:**
+
+Dialog konfirmasi Logout sudah jadi. `flutter analyze` hasilnya No issues found, dan keenam test lolos. Perubahan ini belum di-commit.
+
+**Cara kerjanya:**
+1. Tekan **Logout**. SnackBar wajib "Kamu telah menekan tombol Logout!" tetap muncul, lalu dialog "Yakin ingin keluar dari MyPortfolio?" terbuka.
+2. Pilih **Batal**: muncul SnackBar "Logout dibatalkan."
+3. Pilih **Logout** (tombol merah): muncul SnackBar "Logout berhasil."
+4. Lihat Proyek dan Tambah Proyek tidak berubah.
+
+Logout-nya belum benar-benar mengeluarkan pengguna, karena aplikasi ini belum punya fitur login. Untuk sekarang yang ada baru alur dialognya.
+
+**Yang berubah:**
+- [lib/menu.dart](lib/menu.dart): model `ItemHomepage` dapat atribut opsional `pesanKonfirmasi`. Hanya tombol yang atribut itu diisi yang membuka dialog, jadi `ItemCard` tetap tanpa if-else berdasarkan nama tombol. Ini juga mendukung nilai kualitas kode.
+- [test/widget_test.dart](test/widget_test.dart): 3 test baru untuk Batal, konfirmasi Logout, dan tombol lain yang tidak membuka dialog.
+- [README.md](README.md): daftar fitur, progres mingguan, tabel widget di jawaban nomor 2, dan AI disclosure ikut diperbarui.
+
+**Command commit bertahap** (ini sudah termasuk log chat AI dari sebelumnya):
+```
+git add lib/menu.dart test/widget_test.dart
+git commit -m "feat: tambah dialog konfirmasi sebelum logout"
+git add README.md docs/ai-chat-log.md
+git commit -m "docs: dokumentasikan konfirmasi logout dan lampirkan log chat AI"
+git push origin main
+```
+
+Sebelum commit, coba dulu dengan `flutter run -d chrome`. Log chat di `docs/ai-chat-log.md` dibuat sebelum fitur ini, jadi percakapan soal Logout belum tercatat. Kalau mau lengkap, bilang saja, nanti saya ekspor ulang sebelum Anda commit. Setelah push, kumpulkan link commit terakhir ke SCELE.
+
+---
+
+## 🧑 Saya — 18 Nov 2026 16:44 WIB
+
+*[melampirkan PDF: Tutorial 09_ Flutter Navigation, Layouts, Forms, and Input Elements – PBP Gasal 2026_2027.pdf]*
+
+**🤖 Claude:**
+
+Saya cek dulu kondisi repo dan versi Flutter, karena PDF Tutorial 9 meminta import `material_ui` untuk Flutter 3.50 ke atas.
+
+> 🔧 `Bash` — Check repo state, Flutter version and material_ui
+
+> 🔧 `PowerShell` — Show Flutter version
+
+**🤖 Claude:**
+
+Flutter Anda versi 3.47, jadi sesuai PDF saya tambahkan paket `material_ui` dulu.
+
+> 🔧 `PowerShell` — Add material_ui package
+
+> 🔧 `Read` — lib\menu.dart
+
+**🤖 Claude:**
+
+Sekarang saya susun ulang struktur file sesuai bagian "Refactoring File" di PDF.
+
+> 🔧 `Bash` — Create screens/widgets folders and move menu.dart
+
+> 🔧 `Write` — lib\widgets\project_card.dart
+
+> 🔧 `Write` — lib\widgets\left_drawer.dart
+
+> 🔧 `Write` — lib\screens\project_form.dart
+
+**🤖 Claude:**
+
+Sekarang saya perbarui `screens/menu.dart`: `ItemCard` dihapus dari file ini (sudah pindah ke `project_card.dart`), lalu drawer ditambahkan.
+
+> 🔧 `Bash` — Remove ItemCard class from menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\main.dart
+
+**🤖 Claude:**
+
+Sekarang saya tambahkan test untuk drawer, navigasi, dan form.
+
+> 🔧 `Bash` — Show test file header and footer
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and widget tests
+
+> 🔧 `Edit` — lib\widgets\left_drawer.dart
+
+> 🔧 `Edit` — lib\widgets\left_drawer.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and widget tests
+
+**🤖 Claude:**
+
+Semua 10 test lolos. Terakhir saya pastikan tidak ada komentar TODO yang tersisa (PDF mewajibkan ini), lalu saya catat progresnya di README.
+
+> 🔧 `Grep` — TODO
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Bash` — List changed files and lib structure
+
+> 🔧 `Edit` — README.md
+
+**🤖 Claude:**
+
+Tutorial 9 sudah selesai saya kerjakan, tapi belum di-commit. Deadline-nya hari ini pukul 23.59 WIB. `flutter analyze` hasilnya No issues found, kesepuluh test lolos, dan tidak ada komentar TODO yang tersisa.
+
+**Satu langkah belum jalan: paket `material_ui`.** Flutter Anda versi 3.47, dan PDF meminta `flutter pub add material_ui` untuk versi ini. Sistem menolak saya menjalankan perintah itu, jadi semua file masih memakai `import 'package:flutter/material.dart';`. Ini tetap berjalan normal dan tanpa peringatan di Flutter 3.47. Kalau mau mengikuti PDF persis, jalankan:
+```
+flutter pub add material_ui
+```
+Setelah itu, beri tahu saya. Nanti saya ganti import di kelima file lalu saya jalankan ulang analyzer dan test.
+
+**Yang dikerjakan, sesuai PDF:**
+- **Struktur baru:** `lib/screens/` berisi [menu.dart](lib/screens/menu.dart) dan [project_form.dart](lib/screens/project_form.dart), sedangkan `lib/widgets/` berisi [left_drawer.dart](lib/widgets/left_drawer.dart) dan [project_card.dart](lib/widgets/project_card.dart). `ItemCard` dipindah ke `project_card.dart`.
+- **Drawer:** header "My Portfolio", menu Home dan Add Project. Drawer dipasang di halaman menu dan halaman form.
+- **Form tambah proyek:** nama, deskripsi, kategori (dropdown), teknologi, dan tautan. Nama dan deskripsi wajib diisi. Tombol Save menampilkan pop-up berisi semua isian, lalu form di-reset.
+- **Tombol Tambah Proyek** sekarang membuka halaman form lewat `Navigator.push`, jadi tombol Back kembali ke menu.
+- **Fitur Tugas 7 tetap ada:** warna tombol, SnackBar, dan konfirmasi Logout.
+
+**Satu tambahan di luar PDF:** teks header drawer saya batasi jumlah barisnya (`maxLines`). Tanpa itu, teksnya meluap di layar sempit atau saat ukuran font HP diperbesar, dan ini sempat membuat test gagal.
+
+**Command commit bertahap:**
+```
+git add lib/ test/widget_test.dart
+git commit -m "feat: tambah drawer, form tambah proyek, dan navigasi; pisahkan screens dan widgets"
+git add README.md
+git commit -m "docs: catat progres Tutorial 09 di README"
+git push origin main
+```
+
+Sebelum commit, coba dulu dengan `flutter run -d chrome`: buka drawer, tekan Tambah Proyek, lalu isi form. Setelah push, kumpulkan link commit terakhir ke SCELE.
+
+---
+
+## 🧑 Saya — 18 Nov 2026 21:19 WIB
+
+gw pengen ada branch baru gitu oke ga?
+
+**🤖 Claude:**
+
+Oke, ide bagus. Rubrik Git di Individual Assignment memberi nilai 4 untuk "branching yang terorganisir untuk tiap fitur". Perubahan Tutorial 9 yang belum di-commit akan ikut pindah ke branch baru, jadi tidak ada yang hilang.
+
+**Command lengkap:**
+```
+git switch -c tutorial-09
+git add lib/ test/widget_test.dart
+git commit -m "feat: tambah drawer, form tambah proyek, dan navigasi; pisahkan screens dan widgets"
+git add README.md
+git commit -m "docs: catat progres Tutorial 09 di README"
+git push -u origin tutorial-09
+```
+
+Lalu gabungkan ke `main`. Ada dua cara:
+- **Lewat Pull Request (lebih rapi):** buka repo di GitHub, klik **Compare & pull request** untuk branch `tutorial-09`, lalu **Merge**. Riwayat PR ini juga bisa jadi bukti branching yang terorganisir.
+- **Lewat terminal:**
+  ```
+  git switch main
+  git merge tutorial-09
+  git push origin main
+  ```
+
+**Yang perlu diperhatikan:**
+- **Merge sebelum 23.59 WIB hari ini.** Asdos biasanya membuka branch `main`, jadi pastikan hasil akhirnya sudah masuk ke sana.
+- **Link SCELE tetap link commit.** Commit di branch mana pun tetap punya link sendiri, tapi paling aman pakai commit terakhir setelah merge ke `main`.
+- **Untuk tugas berikutnya**, pola yang sama bisa diulang, misalnya branch `tugas-8` untuk Individual Assignment 8.
+
+---
+
+## 🧑 Saya — 22 Nov 2026 23:11 WIB
+
+*[melampirkan PDF: Individual Assignment 8_ Flutter Navigation, Layouts, Forms, and Input Elements – PBP Gasal 2026_2027.pdf]*
+
+**🤖 Claude:**
+
+Saya cek dulu kondisi repo dan isi file terbaru sebelum mengerjakan Tugas 8.
+
+> 🔧 `Bash` — Inspect repo state, structure and README
+
+**🤖 Claude:**
+
+Ada yang perlu dicek dulu: branch `tutorial-09` sepertinya belum ada di GitHub, padahal Tutorial 9 adalah prasyarat Tugas 8.
+
+> 🔧 `Bash` — Verify whether Tutorial 9 reached GitHub
+
+**🤖 Claude:**
+
+Tutorial 9 ternyata belum sampai ke GitHub. Soal ini saya jelaskan di akhir. Tugas 8 tetap saya kerjakan di atas branch `tutorial-09`, dengan bagian **Edukasi** sebagai formulir barunya.
+
+> 🔧 `Write` — lib\utils\form_validators.dart
+
+> 🔧 `Write` — lib\screens\education_form.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\widgets\project_card.dart
+
+> 🔧 `Edit` — lib\widgets\project_card.dart
+
+> 🔧 `Edit` — lib\widgets\left_drawer.dart
+
+> 🔧 `Edit` — lib\widgets\left_drawer.dart
+
+> 🔧 `Edit` — lib\widgets\left_drawer.dart
+
+> 🔧 `Write` — test\form_validators_test.dart
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+**🤖 Claude:**
+
+Test di ukuran layar HP (360 px) menemukan bug yang asli: tiga `InfoCard` meluap 4,6 px ke kanan, dan isi kartu aksi bisa meluap ke bawah. Saya perbaiki layout-nya.
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\screens\menu.dart
+
+> 🔧 `Edit` — lib\widgets\project_card.dart
+
+> 🔧 `Bash` — Review tests that rely on button labels and positions
+
+> 🔧 `Edit` — lib\widgets\project_card.dart
+
+> 🔧 `Bash` — Scroll to Logout card in tests before tapping
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+> 🔧 `PowerShell` — Show why the Save button tap failed
+
+**🤖 Claude:**
+
+Test ini menemukan bug kedua: SnackBar dari kartu aksi menutupi tombol **Simpan** di layar HP selama beberapa detik. Saya beri ruang di bawah form supaya tombolnya bisa digulir ke atas SnackBar.
+
+> 🔧 `Edit` — lib\screens\education_form.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+> 🔧 `PowerShell` — Show the remaining test failure details
+
+> 🔧 `Bash` — Show the failing test lines
+
+> 🔧 `Read` — test\widget_test.dart
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+> 🔧 `PowerShell` — Show concise failure details
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+> 🔧 `PowerShell` — Show tap position after scrolling
+
+**🤖 Claude:**
+
+Masih memperbaiki satu test: kolom yang sedang fokus menarik form kembali ke atas saat test menggulir ke tombol Simpan.
+
+> 🔧 `Edit` — test\widget_test.dart
+
+> 🔧 `PowerShell` — Run Flutter analyzer and all tests
+
+**🤖 Claude:**
+
+Semua 21 test lolos. Sekarang saya tulis jawaban reflektif Tugas 8 di README dan perbarui log chat AI.
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Edit` — README.md
+
+> 🔧 `Bash` — Regenerate AI chat log and check for private data
+
+> 🔧 `PowerShell` — Final analyzer and test run

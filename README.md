@@ -13,6 +13,7 @@ Aplikasi mobile Flutter untuk portofolio pribadi, bagian dari Proyek Individu ma
 - Halaman utama `MyHomePage` (StatelessWidget) di `lib/screens/menu.dart`, terpisah dari `lib/main.dart`.
 - Drawer menu (`lib/widgets/left_drawer.dart`) untuk berpindah ke Home dan Add Project.
 - Halaman form tambah proyek (`lib/screens/project_form.dart`) dengan validasi; data yang valid ditampilkan di pop-up.
+- Halaman form edukasi (`lib/screens/education_form.dart`): institusi, jenjang, jurusan, tanggal mulai dan selesai (date picker), opsi "Masih berjalan", dan IPK opsional, dengan dialog ringkasan.
 - Tiga `InfoCard` berisi NPM, nama, dan kelas.
 - Tiga tombol aksi `ItemCard` dengan warna latar berbeda: **Lihat Proyek** (biru), **Tambah Proyek** (hijau), dan **Logout** (merah).
 - Setiap tombol memunculkan SnackBar "Kamu telah menekan tombol [Nama Tombol]!".
@@ -44,6 +45,7 @@ flutter test
 | Tutorial 08 | Inisialisasi proyek, pemisahan `menu.dart`, `MyHomePage` jadi Stateless, `InfoCard`, `ItemCard`, SnackBar |
 | Tugas 7 | Atribut `color` pada `ItemHomepage` agar tiap tombol punya warna sendiri, dialog konfirmasi Logout, widget test, README |
 | Tutorial 09 | Drawer menu (`LeftDrawer`), form tambah proyek dengan validasi (`ProjectFormPage`), navigasi tombol Tambah Proyek, refactor ke `lib/screens/` dan `lib/widgets/` |
+| Tugas 8 | Formulir edukasi dengan date picker dan validasi, kartu aksi dan opsi drawer baru, layout aman untuk layar sempit, unit test validator |
 
 ---
 
@@ -128,6 +130,38 @@ flutter test
 
    Dalam kasus tersebut perlu **hot restart**. **Full restart** (hentikan lalu jalankan ulang `flutter run`) diperlukan untuk perubahan di luar kode Dart, seperti menambah package di `pubspec.yaml`, menambah aset, atau mengubah kode native Android/iOS.
 
+### Tugas 8
+
+1. **`push()`, `pushReplacement()`, dan `pop()`**
+
+   `Navigator` menyimpan halaman sebagai tumpukan (stack).
+   - `Navigator.push()` menaruh halaman baru di atas tumpukan. Halaman lama tetap ada, jadi pengguna bisa kembali.
+   - `Navigator.pushReplacement()` mengganti halaman teratas dengan halaman baru, jadi halaman lama tidak bisa dikunjungi lagi lewat Back.
+   - `Navigator.pop()` membuang halaman teratas sehingga halaman di bawahnya tampil. Method ini juga dipakai untuk menutup dialog.
+
+   Formulir dari kartu aksi dibuka dengan `Navigator.push()`, sehingga tumpukannya `[Home, Form]` dan tombol kembali perangkat membawa pengguna ke Home. Opsi Add Project dan Add Education di drawer memakai `pushReplacement()` agar halaman tidak terus menumpuk saat berpindah.
+
+   Opsi **Home** memakai `Navigator.pushAndRemoveUntil(..., (route) => false)`, yaitu membuka `MyHomePage` dan menghapus semua halaman di bawahnya. Kalau hanya memakai `pushReplacement()` dari form yang dibuka lewat kartu, tumpukannya menjadi `[Home, Home]`.
+
+2. **Struktur `Scaffold`, `AppBar`, dan `Drawer`**
+
+   `Scaffold` menyediakan kerangka yang sama di setiap halaman: `appBar` di atas, `drawer` di sisi kiri, dan `body` untuk isi. `AppBar` membuat judul dan posisi tombol menu selalu konsisten, sedangkan satu widget `LeftDrawer` dipakai ulang di halaman menu, form proyek, dan form edukasi. Jika menu navigasi berubah, cukup satu berkas yang diedit.
+
+   Contoh warna tema: `Theme.of(context).colorScheme.primary` (turunan warna dasar indigo di `main.dart`) dipakai untuk `AppBar` halaman utama, serta `AppBar` dan tombol **Simpan** di formulir edukasi. Jika warna dasar diganti di `main.dart`, semuanya ikut berubah.
+
+3. **Tata letak formulir**
+
+   Formulir disusun satu kolom karena urutan pengisiannya jelas dari atas ke bawah dan cocok untuk layar ponsel yang sempit. `Column` dengan `CrossAxisAlignment.stretch` membuat semua input selebar layar.
+
+   - **Pengatur jarak:** `padding` pada `SingleChildScrollView` menjaga isi tidak menempel ke tepi layar, dan `spacing` pada `Column` memberi jarak seragam antar-input. Ruang bawah 88 piksel membuat tombol Simpan bisa digulir ke atas SnackBar.
+   - **Penggulir:** `Column` sendiri tidak bisa digulir, jadi isinya akan meluap saat ruang terbatas. `SingleChildScrollView` membuat semua input dan tombol Simpan tetap terjangkau ketika layar pendek atau papan ketik tampil. `SafeArea` menjauhkan isi dari area sistem seperti notch.
+
+4. **`GlobalKey<FormState>`, `validator`, dan `validate()`**
+
+   `GlobalKey<FormState>` memberi akses ke state `Form` dari luar widget field, misalnya dari tombol Simpan. Setiap `validator` berisi aturan satu kolom dan mengembalikan pesan error, atau `null` jika valid. Saat Simpan ditekan, `_formKey.currentState!.validate()` menjalankan semua validator, menampilkan pesan error di kolom terkait, dan mengembalikan `true` hanya jika semuanya lolos. Dialog ringkasan baru dibuka setelah itu.
+
+   Contoh nilai yang ditolak: IPK `4.5`, karena di luar rentang 0 sampai 4. Papan ketik angka tidak cukup untuk mencegahnya: `4.5` tetap bisa diketik dengan papan ketik angka, dan di Chrome pengguna bisa mengetik atau menempelkan teks apa pun seperti `abc`. `keyboardType` hanya mengatur papan ketik yang muncul, bukan memeriksa nilainya, sehingga aturan tetap harus ada di `validator`.
+
 ---
 
 ## AI Disclosure
@@ -138,8 +172,15 @@ flutter test
   - Menambahkan atribut `color` pada model `ItemHomepage` dan memakainya di `ItemCard` sesuai petunjuk implementasi di soal.
   - Menambahkan widget test untuk warna tombol.
   - Menambahkan dialog konfirmasi Logout (`AlertDialog`) beserta test-nya.
+  - Tutorial 09: drawer, form tambah proyek, navigasi, dan refactor struktur folder.
+  - Tugas 8: formulir edukasi, validator di `lib/utils/form_validators.dart`, navigasi dari kartu dan drawer, serta test-nya.
   - Menyusun draf README ini, termasuk draf jawaban pertanyaan reflektif.
 - **Strategi prompting:** saya memberikan PDF tutorial dan soal tugas kepada AI, lalu meminta pengecekan checklist dan implementasi bagian yang belum ada. Hasilnya saya cek dengan `flutter analyze`, `flutter test`, dan menjalankan aplikasi.
 - **Log chat AI:** [docs/ai-chat-log.md](docs/ai-chat-log.md) berisi ekspor percakapan lengkap dengan Claude Code (pesan saya, jawaban AI, dan aksi yang dijalankan AI).
 - **Yang tetap saya kerjakan sendiri:** setup Flutter SDK dan environment, mengikuti Tutorial 08, serta semua commit dan push ke GitHub.
 - **Keterbatasan AI:** AI tidak bisa menjalankan aplikasi di emulator/Chrome untuk saya, jadi tampilan akhir tetap saya periksa sendiri. Jawaban reflektif dari AI saya baca ulang dan sesuaikan dengan pemahaman saya.
+- **Kesalahan yang ditemukan selama pengerjaan:**
+  - Kode awal mengikuti pola tutorial, tetapi test di lebar 360 piksel menunjukkan tiga `InfoCard` meluap 4,6 piksel. Perbaikannya memakai `Expanded`.
+  - SnackBar dari kartu aksi sempat menutupi tombol Simpan di layar ponsel. Perbaikannya menambah ruang gulir di bawah form.
+  - Opsi Home dengan `pushReplacement()` membuat tumpukan `[Home, Home]`, lalu diganti dengan `pushAndRemoveUntil()`.
+  - AI pernah membuat dan mem-push commit kosong tanpa diminta, sehingga sejak itu commit dan push hanya saya lakukan sendiri.
