@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myportofolio_mobile/screens/education_form.dart';
+import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
 
@@ -12,7 +14,18 @@ class MyHomePage extends StatelessWidget {
   // Setiap tombol membawa warnanya sendiri, jadi ItemCard tidak perlu if-else.
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
-    ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
+    ItemHomepage(
+      "Tambah Proyek",
+      Icons.add_circle,
+      Colors.green,
+      halamanTujuan: (context) => const ProjectFormPage(),
+    ),
+    ItemHomepage(
+      "Tambah Edukasi",
+      Icons.school,
+      Colors.deepPurple,
+      halamanTujuan: (context) => const EducationFormPage(),
+    ),
     ItemHomepage(
       "Logout",
       Icons.logout,
@@ -41,7 +54,8 @@ class MyHomePage extends StatelessWidget {
       // Drawer menu navigasi dari sisi kiri layar.
       drawer: const LeftDrawer(),
       // Body halaman utama dengan padding di sekelilingnya.
-      body: Padding(
+      // Halaman bisa digulir agar semua kartu terjangkau di layar kecil.
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,9 +64,10 @@ class MyHomePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                InfoCard(title: 'NPM', content: npm),
-                InfoCard(title: 'Name', content: nama),
-                InfoCard(title: 'Class', content: kelas),
+                // Expanded membagi lebar sama rata agar tidak meluap di layar sempit.
+                Expanded(child: InfoCard(title: 'NPM', content: npm)),
+                Expanded(child: InfoCard(title: 'Name', content: nama)),
+                Expanded(child: InfoCard(title: 'Class', content: kelas)),
               ],
             ),
 
@@ -75,7 +90,9 @@ class MyHomePage extends StatelessWidget {
 
                   // GridView menampilkan kartu tombol dalam tata letak kisi 3 kolom.
                   GridView.count(
-                    primary: true,
+                    // Pengguliran ditangani oleh SingleChildScrollView di luar.
+                    primary: false,
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(20),
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
@@ -109,9 +126,7 @@ class InfoCard extends StatelessWidget {
       // Memberikan efek bayangan kartu elevasi 2 unit.
       elevation: 2.0,
       child: Container(
-        // Menyesuaikan lebar kartu dengan proporsi layar (dibagi 3.5).
-        width: MediaQuery.of(context).size.width / 3.5,
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
         // Menyusun teks title dan content secara vertikal.
         child: Column(
           children: [
@@ -120,7 +135,8 @@ class InfoCard extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
-            Text(content),
+            // Teks panjang seperti NPM diperkecil agar tetap satu baris.
+            FittedBox(fit: BoxFit.scaleDown, child: Text(content)),
           ],
         ),
       ),
@@ -137,5 +153,14 @@ class ItemHomepage {
   // Jika diisi, aksi tombol harus dikonfirmasi lewat dialog berisi pesan ini.
   final String? pesanKonfirmasi;
 
-  ItemHomepage(this.name, this.icon, this.color, {this.pesanKonfirmasi});
+  // Jika diisi, tombol membuka halaman ini dengan Navigator.push().
+  final WidgetBuilder? halamanTujuan;
+
+  ItemHomepage(
+    this.name,
+    this.icon,
+    this.color, {
+    this.pesanKonfirmasi,
+    this.halamanTujuan,
+  });
 }

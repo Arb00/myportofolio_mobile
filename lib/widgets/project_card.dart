@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
-import 'package:myportofolio_mobile/screens/project_form.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
@@ -25,10 +24,11 @@ class ItemCard extends StatelessWidget {
 
           // Navigasi ke halaman yang sesuai. push() menumpuk halaman form di atas
           // menu, jadi tombol Back akan kembali ke menu.
-          if (item.name == "Tambah Proyek") {
+          final halamanTujuan = item.halamanTujuan;
+          if (halamanTujuan != null) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ProjectFormPage()),
+              MaterialPageRoute(builder: halamanTujuan),
             );
           }
 
@@ -39,22 +39,26 @@ class ItemCard extends StatelessWidget {
         },
         child: Container(
           padding: const EdgeInsets.all(8),
+          // FittedBox mengecilkan isi kartu jika ruangnya tidak cukup.
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    item.icon,
+                    color: Colors.white,
+                    size: 30.0,
+                  ),
+                  const Padding(padding: EdgeInsets.all(3)),
+                  Text(
+                    item.name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

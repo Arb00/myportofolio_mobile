@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 
@@ -46,13 +47,15 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Home'),
-            // Navigasi ke halaman utama portofolio
+            // Kembali ke halaman utama dan bersihkan tumpukan, supaya tidak ada
+            // dua halaman Home saat form dibuka dari kartu aksi.
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyHomePage(),
                 ),
+                (route) => false,
               );
             },
           ),
@@ -66,6 +69,19 @@ class LeftDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ProjectFormPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.school_outlined),
+            title: const Text('Add Education'),
+            // Navigasi ke halaman tambah edukasi.
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EducationFormPage(),
                 ),
               );
             },

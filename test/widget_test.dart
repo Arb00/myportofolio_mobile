@@ -30,6 +30,8 @@ void main() {
   testWidgets('Logout meminta konfirmasi dan bisa dibatalkan', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
+    await tester.ensureVisible(find.byIcon(Icons.logout));
+    await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.logout));
     await tester.pumpAndSettle();
 
@@ -47,6 +49,8 @@ void main() {
   testWidgets('Logout yang dikonfirmasi menampilkan pesan berhasil', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
+    await tester.ensureVisible(find.byIcon(Icons.logout));
+    await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.logout));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Logout'));
@@ -147,5 +151,117 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(AlertDialog), findsNothing);
     expect(find.text('MyPortfolio'), findsNothing);
+  });
+
+  group('Formulir Edukasi', () {
+    // Ukuran layar ponsel, untuk memastikan tombol Simpan tetap terjangkau.
+    void pakaiLayarPonsel(WidgetTester tester) {
+      tester.view.physicalSize = const Size(360, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+    }
+
+    Future<void> bukaDariKartu(WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+      await tester.ensureVisible(find.byIcon(Icons.school));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.school));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> tekanSimpan(WidgetTester tester) async {
+      // Gulir sampai bawah seperti pengguna, supaya Simpan berada di atas SnackBar.
+      // Lepas fokus dulu, karena kolom yang fokus menarik gulir kembali ke dirinya.
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump();
+      final ScrollableState scrollForm = tester.state(
+        find.descendant(of: find.byType(Form), matching: find.byType(Scrollable)).first,
+      );
+      scrollForm.position.jumpTo(scrollForm.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Simpan'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('Bisa dibuka dari drawer dan Home kembali ke menu', (tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.byTooltip('Open navigation menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Add Education'));
+      await tester.pumpAndSettle();
+      expect(find.text('Add Education Form'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Open navigation menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+      expect(find.text('Selamat datang di MyPortfolio Mobile!'), findsOneWidget);
+    });
+
+    testWidgets('Home dari form yang dibuka lewat kartu tidak menumpuk halaman', (tester) async {
+      await bukaDariKartu(tester);
+
+      await tester.tap(find.byTooltip('Open navigation menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+
+      final NavigatorState navigator = tester.state(find.byType(Navigator));
+      expect(navigator.canPop(), isFalse);
+    });
+
+    testWidgets('Input tidak valid memunculkan error dan tidak membuka dialog', (tester) async {
+      pakaiLayarPonsel(tester);
+      await bukaDariKartu(tester);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Nama Institusi'), '   ');
+      await tekanSimpan(tester);
+
+      expect(find.byType(AlertDialog), findsNothing);
+      await tester.dragUntilVisible(
+        find.text('Nama institusi tidak boleh kosong!'),
+        find.byType(SingleChildScrollView),
+        const Offset(0, 100),
+      );
+      expect(find.text('Nama institusi tidak boleh kosong!'), findsOneWidget);
+    });
+
+    testWidgets('Input valid menampilkan semua isian di dialog', (tester) async {
+      pakaiLayarPonsel(tester);
+      await bukaDariKartu(tester);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'Nama Institusi'), 'Universitas Indonesia');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Jurusan'), 'Ilmu Komputer');
+
+      await tester.ensureVisible(find.widgetWithText(TextFormField, 'Tanggal Mulai'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(TextFormField, 'Tanggal Mulai'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('1'));
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byType(SwitchListTile));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(SwitchListTile));
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(TextFormField, 'Tanggal Selesai'), findsNothing);
+
+      await tester.enterText(find.widgetWithText(TextFormField, 'IPK (opsional)'), '3,75');
+      await tekanSimpan(tester);
+
+      expect(find.text('Ringkasan Edukasi'), findsOneWidget);
+      expect(find.text('Institusi: Universitas Indonesia'), findsOneWidget);
+      expect(find.text('Jenjang: S1'), findsOneWidget);
+      expect(find.text('Jurusan: Ilmu Komputer'), findsOneWidget);
+      expect(find.text('Tanggal Selesai: Masih berjalan'), findsOneWidget);
+      expect(find.text('IPK: 3.75'), findsOneWidget);
+
+      await tester.tap(find.text('Tutup'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text('Add Education Form'), findsOneWidget);
+    });
   });
 }
