@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       _pesan(
         e.statusCode == 400
-            ? 'Username atau password salah.'
+            ? 'Login gagal (HTTP 400): username atau password salah.'
             : 'Login gagal (HTTP ${e.statusCode}).',
       );
     } catch (_) {

@@ -14,6 +14,8 @@ jobs:
   build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v2
     with:
+      # Disamakan dengan versi Flutter lokal; stable terbaru bisa membawa lint baru.
+      flutter_version: "3.47.9"
       setup: dart run build_runner build --delete-conflicting-outputs
       coverage_excludes: "**/*.g.dart"
       min_coverage: 0
@@ -30,6 +32,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: "3.47.9"
           cache: true
 
       - run: flutter pub get

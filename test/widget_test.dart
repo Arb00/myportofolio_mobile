@@ -273,7 +273,10 @@ void main() {
     await tester.pumpAndSettle();
     await isiLogin(tester, password: 'salah');
 
-    expect(find.text('Username atau password salah.'), findsOneWidget);
+    expect(
+      find.text('Login gagal (HTTP 400): username atau password salah.'),
+      findsOneWidget,
+    );
     expect(find.widgetWithText(FilledButton, 'Login'), findsOneWidget);
   });
 
