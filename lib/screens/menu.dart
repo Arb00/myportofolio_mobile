@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/project_list.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -13,12 +16,18 @@ class MyHomePage extends StatelessWidget {
 
   // Setiap tombol membawa warnanya sendiri, jadi ItemCard tidak perlu if-else.
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
+    ItemHomepage(
+      "Lihat Proyek",
+      Icons.folder,
+      Colors.blue,
+      halamanTujuan: (context) => const ProjectListScreen(),
+    ),
     ItemHomepage(
       "Tambah Proyek",
       Icons.add_circle,
       Colors.green,
       halamanTujuan: (context) => const ProjectFormPage(),
+      butuhLogin: true,
     ),
     ItemHomepage(
       "Tambah Edukasi",
@@ -31,6 +40,7 @@ class MyHomePage extends StatelessWidget {
       Icons.logout,
       Colors.red,
       pesanKonfirmasi: "Yakin ingin keluar dari MyPortfolio?",
+      aksi: (context) => context.read<AuthState>().logout(),
     ),
   ];
 
@@ -42,10 +52,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         // Ikon hamburger drawer dibuat putih agar kontras dengan AppBar.
@@ -65,9 +72,15 @@ class MyHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Expanded membagi lebar sama rata agar tidak meluap di layar sempit.
-                Expanded(child: InfoCard(title: 'NPM', content: npm)),
-                Expanded(child: InfoCard(title: 'Name', content: nama)),
-                Expanded(child: InfoCard(title: 'Class', content: kelas)),
+                Expanded(
+                  child: InfoCard(title: 'NPM', content: npm),
+                ),
+                Expanded(
+                  child: InfoCard(title: 'Name', content: nama),
+                ),
+                Expanded(
+                  child: InfoCard(title: 'Class', content: kelas),
+                ),
               ],
             ),
 
@@ -130,10 +143,7 @@ class InfoCard extends StatelessWidget {
         // Menyusun teks title dan content secara vertikal.
         child: Column(
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8.0),
             // Teks panjang seperti NPM diperkecil agar tetap satu baris.
             FittedBox(fit: BoxFit.scaleDown, child: Text(content)),
@@ -156,11 +166,19 @@ class ItemHomepage {
   // Jika diisi, tombol membuka halaman ini dengan Navigator.push().
   final WidgetBuilder? halamanTujuan;
 
+  // Jika true, halamanTujuan hanya dibuka setelah pengguna login.
+  final bool butuhLogin;
+
+  // Dijalankan setelah pengguna menyetujui dialog konfirmasi.
+  final Future<void> Function(BuildContext context)? aksi;
+
   ItemHomepage(
     this.name,
     this.icon,
     this.color, {
     this.pesanKonfirmasi,
     this.halamanTujuan,
+    this.butuhLogin = false,
+    this.aksi,
   });
 }

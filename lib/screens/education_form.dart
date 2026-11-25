@@ -19,7 +19,13 @@ class _EducationFormPageState extends State<EducationFormPage> {
   final _mulaiController = TextEditingController();
   final _selesaiController = TextEditingController();
 
-  static const List<String> _daftarJenjang = ['SMA/SMK', 'D3', 'S1', 'S2', 'S3'];
+  static const List<String> _daftarJenjang = [
+    'SMA/SMK',
+    'D3',
+    'S1',
+    'S2',
+    'S3',
+  ];
 
   String _jenjang = 'S1';
   DateTime? _tanggalMulai;
@@ -168,10 +174,12 @@ class _EducationFormPageState extends State<EducationFormPage> {
                   initialValue: _jenjang,
                   decoration: _dekorasi('Jenjang'),
                   items: _daftarJenjang
-                      .map((jenjang) => DropdownMenuItem(
-                            value: jenjang,
-                            child: Text(jenjang),
-                          ))
+                      .map(
+                        (jenjang) => DropdownMenuItem(
+                          value: jenjang,
+                          child: Text(jenjang),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) => setState(() => _jenjang = value!),
                 ),
@@ -220,8 +228,9 @@ class _EducationFormPageState extends State<EducationFormPage> {
                   ),
                 TextFormField(
                   controller: _ipkController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   textInputAction: TextInputAction.done,
                   decoration: _dekorasi('IPK (opsional)', hint: 'Contoh: 3.75'),
                   validator: FormValidators.ipk,

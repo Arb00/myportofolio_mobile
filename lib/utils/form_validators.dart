@@ -13,6 +13,20 @@ class FormValidators {
     return null;
   }
 
+  /// URL harus diawali http:// atau https:// dan punya nama host.
+  /// Jika `wajibDiisi` false, isian kosong dianggap valid.
+  static String? url(String? value, String label, {bool wajibDiisi = true}) {
+    final teks = value?.trim() ?? '';
+    if (teks.isEmpty) return wajibDiisi ? '$label tidak boleh kosong!' : null;
+    final uri = Uri.tryParse(teks);
+    if (uri == null ||
+        !(uri.scheme == 'http' || uri.scheme == 'https') ||
+        uri.host.isEmpty) {
+      return '$label harus berupa URL, misalnya https://contoh.com!';
+    }
+    return null;
+  }
+
   /// IPK bersifat opsional. Jika diisi, harus angka 0 sampai 4 (maksimal 2 desimal).
   /// Koma diterima karena lazim dipakai di Indonesia, misalnya `3,75`.
   static String? ipk(String? value) {

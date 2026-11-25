@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
@@ -14,22 +15,23 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         // Aksi ketika kartu ditekan oleh pengguna.
-        onTap: () {
+        onTap: () async {
           // Menampilkan SnackBar dengan pesan interaktif.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
+              SnackBar(
+                content: Text("Kamu telah menekan tombol ${item.name}!"),
+              ),
             );
 
           // Navigasi ke halaman yang sesuai. push() menumpuk halaman form di atas
           // menu, jadi tombol Back akan kembali ke menu.
           final halamanTujuan = item.halamanTujuan;
           if (halamanTujuan != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: halamanTujuan),
-            );
+            if (item.butuhLogin && !await ensureLoggedIn(context)) return;
+            if (!context.mounted) return;
+            Navigator.push(context, MaterialPageRoute(builder: halamanTujuan));
           }
 
           // Tombol yang berisiko (misalnya Logout) meminta konfirmasi dulu.
@@ -46,11 +48,7 @@ class ItemCard extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    item.icon,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
+                  Icon(item.icon, color: Colors.white, size: 30.0),
                   const Padding(padding: EdgeInsets.all(3)),
                   Text(
                     item.name,
@@ -92,12 +90,19 @@ class ItemCard extends StatelessWidget {
     // Halaman bisa saja sudah tertutup selama dialog terbuka.
     if (!context.mounted) return;
 
+    if (setuju == true && item.aksi != null) {
+      await item.aksi!(context);
+      if (!context.mounted) return;
+    }
+
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
           content: Text(
-            setuju == true ? "${item.name} berhasil." : "${item.name} dibatalkan.",
+            setuju == true
+                ? "${item.name} berhasil."
+                : "${item.name} dibatalkan.",
           ),
         ),
       );

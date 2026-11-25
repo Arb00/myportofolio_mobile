@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
+import 'package:myportofolio_mobile/services/api_client.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // apiClient bisa diganti saat test, supaya tidak memanggil server sungguhan.
+  MyApp({super.key, ApiClient? apiClient})
+    : apiClient = apiClient ?? ApiClient();
+
+  final ApiClient apiClient;
 
   @override
   Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider.value(value: apiClient),
+        ChangeNotifierProvider(create: (context) => AuthState(apiClient)),
+      ],
+      child: _buildApp(),
+    );
+  }
+
+  Widget _buildApp() {
     return MaterialApp(
       title: 'MyPortfolio',
       theme: ThemeData(

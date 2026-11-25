@@ -49,6 +49,26 @@ void main() {
     });
   });
 
+  group('url', () {
+    test('menerima http/https dengan host, dan kosong jika opsional', () {
+      expect(FormValidators.url('https://github.com/a/b', 'Tautan'), isNull);
+      expect(FormValidators.url(' http://localhost:8000 ', 'Tautan'), isNull);
+      expect(FormValidators.url('', 'Gambar', wajibDiisi: false), isNull);
+    });
+
+    test('menolak kosong jika wajib, tanpa skema, dan skema lain', () {
+      for (final nilai in [
+        '',
+        'github.com',
+        'ftp://a.com',
+        'https://',
+        'abc',
+      ]) {
+        expect(FormValidators.url(nilai, 'Tautan'), isNotNull, reason: nilai);
+      }
+    });
+  });
+
   test('formatTanggal memakai dd/mm/yyyy', () {
     expect(FormValidators.formatTanggal(DateTime(2025, 8, 1)), '01/08/2025');
   });
